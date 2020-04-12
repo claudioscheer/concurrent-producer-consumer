@@ -13,11 +13,11 @@ public class Test {
     private static List<ProducerConsumer> getAllProducersConsumers(int numberProducers, int numberConsumers,
             Monitor<Double> monitor) {
         List<ProducerConsumer> producersConsumers = new ArrayList<>();
-        for (int i = 0; i < numberProducers; i++) {
-            producersConsumers.add(new Producer(monitor));
-        }
         for (int i = 0; i < numberConsumers; i++) {
             producersConsumers.add(new Consumer(monitor));
+        }
+        for (int i = 0; i < numberProducers; i++) {
+            producersConsumers.add(new Producer(monitor));
         }
         return producersConsumers;
     }
@@ -69,7 +69,7 @@ public class Test {
         if (warmUp) {
             System.out.println("Warming-up...");
             try {
-                TimeUnit.SECONDS.sleep(20);
+                TimeUnit.SECONDS.sleep(2);
             } catch (InterruptedException e) {
             }
             ProducerConsumer.countingOperations = true;
@@ -77,7 +77,7 @@ public class Test {
 
         try {
             System.out.println("Producing and consuming...");
-            TimeUnit.MINUTES.sleep(1);
+            TimeUnit.SECONDS.sleep(5);
         } catch (InterruptedException e) {
         }
 

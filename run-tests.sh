@@ -10,4 +10,4 @@ ant
 #    echo $(java -cp bin Test) >> results/JavaLock.txt
 # done
 
-java -cp bin Test 1000000 2000000 1 7 1
+java -cp bin Test 1000000 2000000 0 11 1
