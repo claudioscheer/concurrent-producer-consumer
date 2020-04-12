@@ -90,9 +90,9 @@ def get_subplot(ax, data, title):
     width = 0.3
     labels = np.arange(3)
     data_per_initial_sizes = [
-        [x for x in data if x["initial_size"] == 100000],
-        [x for x in data if x["initial_size"] == 200000],
-        [x for x in data if x["initial_size"] == 300000],
+        [x for x in data if x["maximum_size"] == 300000],
+        [x for x in data if x["maximum_size"] == 500000],
+        [x for x in data if x["maximum_size"] == 1000000],
     ]
     maximum_300000_enq = [x["enqueues"] for x in data_per_initial_sizes[0]]
     maximum_300000_deq = [x["dequeues"] for x in data_per_initial_sizes[0]]
@@ -161,6 +161,7 @@ def auto_label(rects, ax, percentages, current_values=[], bottom=False):
             textcoords="data",
             ha="center",
             va="center",
+            fontweight="bold",
         )
         if bottom:
             ax.annotate(
@@ -170,6 +171,7 @@ def auto_label(rects, ax, percentages, current_values=[], bottom=False):
                 textcoords="data",
                 ha="center",
                 va="bottom",
+                fontweight="bold",
             )
 
 
