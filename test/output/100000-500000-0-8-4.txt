@@ -1,0 +1,16 @@
+
+Initial list size: 100000
+Maximum list size: 500000
+Use warm-up: false
+Number of producers: 8
+Number of consumers: 4
+
+Starting test...
+Starting producers and consumers...
+Producing and consuming...
+Interrupting threads...
+
+Current monitor size: 500000
+Number of enqueues: 437305814
+Number of dequeues: 436905814
+Finished.
