@@ -1,9 +1,9 @@
 #!/bin/bash
 
-rm -rf ./bin ./output
-# I used ant to build the project.
+rm -rf ../bin ./output
+cd ..
 ant
-
+cd -
 mkdir output
 
 warm_up=(0 1)
@@ -15,7 +15,7 @@ for w in "${warm_up[@]}"; do
         for m in "${maximum_sizes[@]}"; do
             for p in "${producers[@]}"; do
                 c=$((12 - p))
-                java -cp bin Test $i $m $w $p $c > output/$i-$m-$w-$p-$c.txt
+                java -cp ../bin Test $i $m $w $p $c > output/$i-$m-$w-$p-$c.txt
             done
         done
     done
