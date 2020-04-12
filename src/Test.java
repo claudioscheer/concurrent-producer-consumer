@@ -69,7 +69,7 @@ public class Test {
         if (warmUp) {
             System.out.println("Warming-up...");
             try {
-                TimeUnit.SECONDS.sleep(2);
+                TimeUnit.SECONDS.sleep(10);
             } catch (InterruptedException e) {
             }
             ProducerConsumer.countingOperations = true;
@@ -77,7 +77,7 @@ public class Test {
 
         try {
             System.out.println("Producing and consuming...");
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(60);
         } catch (InterruptedException e) {
         }
 
