@@ -3,12 +3,12 @@ package main;
 /*
     This monitor implementation follows the book The Art of Multiprocessor Programming, Figure 8.5 (section 8.2.2, chapter 8), and section A.2.2 (Apendix A).
 */
-public class Monitor<T> {
+public class MonitorSynchronized<T> {
     private final T[] items;
     private int tail, head, count = 0;
 
     @SuppressWarnings("unchecked")
-    public Monitor(int maxCapacity) {
+    public MonitorSynchronized(int maxCapacity) {
         items = (T[]) new Object[maxCapacity];
     }
 
