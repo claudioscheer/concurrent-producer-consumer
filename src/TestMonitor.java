@@ -17,7 +17,7 @@ public class TestMonitor {
             }
         }
         long endTimeEnq = System.nanoTime();
-        double durationEnq = (endTimeEnq - startTimeEnq) / 1000000d;
+        double durationEnq = (endTimeEnq - startTimeEnq) / 1_000_000_000d;
         System.out.println(String.format("Enqueue: %s", durationEnq));
         long startTimeDeq = System.nanoTime();
         for (int i = 0; i < operations; i++) {
@@ -27,7 +27,7 @@ public class TestMonitor {
             }
         }
         long endTimeDeq = System.nanoTime();
-        double durationDeq = (endTimeDeq - startTimeDeq) / 1000000d;
+        double durationDeq = (endTimeDeq - startTimeDeq) / 1_000_000_000d;
         System.out.println(String.format("Dequeue: %s", durationDeq));
 
         System.out.println();
@@ -41,7 +41,7 @@ public class TestMonitor {
             }
         }
         long endTimeEnq2 = System.nanoTime();
-        double durationEnq2 = (endTimeEnq2 - startTimeEnq2) / 1000000d;
+        double durationEnq2 = (endTimeEnq2 - startTimeEnq2) / 1_000_000_000d;
         System.out.println(String.format("Enqueue: %s", durationEnq2));
         long startTimeDeq2 = System.nanoTime();
         for (int i = 0; i < operations; i++) {
@@ -51,7 +51,7 @@ public class TestMonitor {
             }
         }
         long endTimeDeq2 = System.nanoTime();
-        double durationDeq2 = (endTimeDeq2 - startTimeDeq2) / 1000000d;
+        double durationDeq2 = (endTimeDeq2 - startTimeDeq2) / 1_000_000_000d;
         System.out.println(String.format("Dequeue: %s", durationDeq2));
     }
 }
