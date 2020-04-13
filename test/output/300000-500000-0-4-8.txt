@@ -10,7 +10,7 @@ Starting producers and consumers...
 Producing and consuming...
 Interrupting threads...
 
-Current monitor size: 1583
-Number of enqueues: 228762885
-Number of dequeues: 229061302
+Current monitor size: 3197
+Number of enqueues: 308868356
+Number of dequeues: 309165159
 Finished.

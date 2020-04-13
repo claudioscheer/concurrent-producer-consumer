@@ -11,7 +11,7 @@ Warming-up...
 Producing and consuming...
 Interrupting threads...
 
-Current monitor size: 84
-Number of enqueues: 66274946
-Number of dequeues: 66274905
+Current monitor size: 102
+Number of enqueues: 74589093
+Number of dequeues: 74588991
 Finished.

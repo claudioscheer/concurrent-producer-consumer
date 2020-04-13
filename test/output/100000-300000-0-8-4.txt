@@ -11,6 +11,6 @@ Producing and consuming...
 Interrupting threads...
 
 Current monitor size: 300000
-Number of enqueues: 241251702
-Number of dequeues: 241051702
+Number of enqueues: 352858350
+Number of dequeues: 352658350
 Finished.
