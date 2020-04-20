@@ -25,4 +25,9 @@ public class IntegerListOperator extends GenericOperator {
     public boolean operateContains() {
         return this.list.contains(RandomNumbers.getRandomInt());
     }
+
+    @Override
+    protected int operateListSize() {
+        return this.list.size();
+    }
 }

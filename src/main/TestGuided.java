@@ -3,10 +3,24 @@ package main;
 import interfaces.GenericListInterface;
 import lists.CoarseList;
 import operators.IntegerListOperator;
+import utils.RandomNumbers;
 
 public class TestGuided {
 
-    public static void main(String[] args) throws InterruptedException {
+    private static void testRandomNumbersProbabilities() {
+        int iterations = 300000;
+        int[] count = new int[4];
+        for (int i = 0; i < iterations; i++) {
+            int p = RandomNumbers.getRandomOperationIndex();
+            count[p] += 1;
+        }
+
+        for (int i = 0; i < count.length; i++) {
+            System.out.println(String.format("%s - %s", count[i], (count[i] / Double.valueOf(iterations)) * 100));
+        }
+    }
+
+    private static void testListCapacity() throws InterruptedException {
         IntegerListOperator.warmingUp = false;
         GenericListInterface<Double> list = new CoarseList<Double>(1);
         double a = Math.random();
@@ -15,7 +29,11 @@ public class TestGuided {
         list.add(Math.random());
 
         int currentMonitorSize = list.size();
-
         System.out.println(String.format("Current monitor size: %s", currentMonitorSize));
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        testRandomNumbersProbabilities();
+        // testListCapacity();
     }
 }

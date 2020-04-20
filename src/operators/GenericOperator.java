@@ -1,5 +1,8 @@
 package operators;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import enums.ListOperationType;
 import utils.RandomNumbers;
 
@@ -11,11 +14,15 @@ public abstract class GenericOperator extends Thread {
 
     protected abstract boolean operateContains();
 
+    protected abstract int operateListSize();
+
     public volatile static boolean warmingUp = true;
     private int[] operationsCount;
+    private List<Integer> listSizes;
 
     public GenericOperator() {
         this.operationsCount = new int[ListOperationType.values().length];
+        this.listSizes = new ArrayList<>();
     }
 
     @Override
@@ -42,7 +49,11 @@ public abstract class GenericOperator extends Thread {
                 this.operateContains();
                 break;
             case listSize:
-                return;
+                if (!GenericOperator.warmingUp) {
+                    // Add to the list if it is not warming-up.
+                    this.listSizes.add(this.operateListSize());
+                }
+                break;
         }
         if (!GenericOperator.warmingUp) {
             operationsCount[operation.ordinal()] += 1;
@@ -50,12 +61,15 @@ public abstract class GenericOperator extends Thread {
     }
 
     protected ListOperationType getRandomOperation() {
-        // Generate random according to a distribuition frequency.
         int index = RandomNumbers.getRandomOperationIndex();
         return ListOperationType.values()[index];
     }
 
     public int[] getOperationsCount() {
         return operationsCount;
+    }
+
+    public List<Integer> getListSizes() {
+        return listSizes;
     }
 }

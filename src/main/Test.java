@@ -31,9 +31,9 @@ public class Test {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        int listInitialSize = Integer.parseInt(args[0]);
-        int listCapacity = Integer.parseInt(args[1]);
-        int numberThreads = Integer.parseInt(args[2]);
+        int listInitialSize = 100;// Integer.parseInt(args[0]);
+        int listCapacity = 300000;// Integer.parseInt(args[1]);
+        int numberThreads = 12;// Integer.parseInt(args[2]);
 
         RandomNumbers.MAX = listCapacity;
 
@@ -74,7 +74,7 @@ public class Test {
         long startTime = System.nanoTime();
         try {
             System.out.println("Producing and consuming...");
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.SECONDS.sleep(3);
         } catch (InterruptedException e) {
         }
 
@@ -90,17 +90,24 @@ public class Test {
         long endTime = System.nanoTime();
         double durationSeconds = (endTime - startTime) / 1_000_000_000d;
 
+        List<Integer> allListSizes = new ArrayList<>();
+        for (IntegerListOperator thread : threads) {
+            allListSizes.addAll(thread.getListSizes());
+        }
+
         int currentMonitorSize = list.size();
         int[] operationsCount = getOperationsCountSum(threads);
 
         System.out.println(String.format("Duration in seconds: %s", durationSeconds));
         System.out.println(String.format("Current list size: %s", currentMonitorSize));
-        System.out.println(String.format("Number of adds: %s", operationsCount[ListOperationType.add.ordinal()]));
-        System.out.println(String.format("Number of removes: %s", operationsCount[ListOperationType.remove.ordinal()]));
+        System.out.println(
+                String.format("Mean list size: %s", allListSizes.stream().mapToInt(x -> x).average().getAsDouble()));
+        System.out.println(String.format("Number of add: %s", operationsCount[ListOperationType.add.ordinal()]));
+        System.out.println(String.format("Number of remove: %s", operationsCount[ListOperationType.remove.ordinal()]));
         System.out.println(
                 String.format("Number of contains: %s", operationsCount[ListOperationType.contains.ordinal()]));
-        System.out
-                .println(String.format("Number of counts: %s", operationsCount[ListOperationType.listSize.ordinal()]));
+        System.out.println(
+                String.format("Number of listSize: %s", operationsCount[ListOperationType.listSize.ordinal()]));
 
         System.out.println("Finished.");
     }
