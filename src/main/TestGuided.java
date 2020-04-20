@@ -2,7 +2,7 @@ package main;
 
 import interfaces.GenericListInterface;
 import lists.CoarseList;
-import lists.IntegerListOperator;
+import operators.IntegerListOperator;
 
 public class TestGuided {
 

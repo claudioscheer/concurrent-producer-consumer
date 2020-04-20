@@ -1,4 +1,4 @@
-package lists;
+package operators;
 
 import interfaces.GenericListInterface;
 import utils.RandomNumbers;

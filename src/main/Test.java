@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 import enums.ListOperationType;
 import interfaces.GenericListInterface;
 import lists.CoarseList;
-import lists.IntegerListOperator;
+import operators.IntegerListOperator;
 import utils.RandomNumbers;
 
 public class Test {
@@ -46,8 +46,11 @@ public class Test {
 
         // It is necessary to limit the size of the list.
         GenericListInterface<Integer> list = new CoarseList<Integer>(listCapacity);
-        for (int i = 0; i < listInitialSize; i++) {
-            list.add(RandomNumbers.getRandomInt());
+        // while (list.size() < listInitialSize) {
+        // list.add(RandomNumbers.getRandomInt());
+        // }
+        for (int i = 1; i <= listInitialSize; i++) {
+            list.add(i);
         }
 
         System.out.println(String.format("List size after initialization: %s", list.size()));
@@ -61,7 +64,7 @@ public class Test {
         // Use a period of warm-up. During this period, operations are not counted.
         System.out.println("Warming-up...");
         try {
-            TimeUnit.SECONDS.sleep(10);
+            TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
         }
         System.out.println(String.format("List size after warm-up: %s", list.size()));
@@ -71,7 +74,7 @@ public class Test {
         long startTime = System.nanoTime();
         try {
             System.out.println("Producing and consuming...");
-            TimeUnit.SECONDS.sleep(60);
+            TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
         }
 

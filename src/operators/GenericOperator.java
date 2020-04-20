@@ -1,8 +1,7 @@
-package lists;
-
-import java.util.concurrent.ThreadLocalRandom;
+package operators;
 
 import enums.ListOperationType;
+import utils.RandomNumbers;
 
 public abstract class GenericOperator extends Thread {
 
@@ -52,7 +51,7 @@ public abstract class GenericOperator extends Thread {
 
     protected ListOperationType getRandomOperation() {
         // Generate random according to a distribuition frequency.
-        int index = ThreadLocalRandom.current().nextInt(0, 2);
+        int index = RandomNumbers.getRandomOperationIndex();
         return ListOperationType.values()[index];
     }
 
