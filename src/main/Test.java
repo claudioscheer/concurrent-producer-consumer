@@ -65,7 +65,7 @@ public class Test {
         // Use a period of warm-up. During this period, operations are not counted.
         System.out.println("Warming-up...");
         try {
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.SECONDS.sleep(10);
         } catch (InterruptedException e) {
         }
         System.out.println(String.format("List size after warm-up: %s", list.size()));
@@ -75,7 +75,7 @@ public class Test {
         long startTime = System.nanoTime();
         try {
             System.out.println("Producing and consuming...");
-            TimeUnit.SECONDS.sleep(3);
+            TimeUnit.SECONDS.sleep(60);
         } catch (InterruptedException e) {
         }
 

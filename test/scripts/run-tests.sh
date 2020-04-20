@@ -6,10 +6,8 @@ ant
 cd -
 mkdir output
 
-# initial_sizes=(100000 200000 300000)
-# capacities=(300000 500000 1000000)
-initial_sizes=(1000 2000 3000)
-capacities=(3000 5000 10000)
+initial_sizes=(100000 200000 300000)
+capacities=(300000 500000 1000000)
 threads=(2 4 6 8 10 12)
 for ((i = 0; i < 3; i++)); do
     for t in "${threads[@]}"; do
