@@ -32,9 +32,9 @@ public class Test {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        int listInitialSize = 100;// Integer.parseInt(args[0]);
-        int listCapacity = 300000;// Integer.parseInt(args[1]);
-        int numberThreads = 12;// Integer.parseInt(args[2]);
+        int listInitialSize = Integer.parseInt(args[0]);
+        int listCapacity = Integer.parseInt(args[1]);
+        int numberThreads = Integer.parseInt(args[2]);
 
         RandomNumbers.MAX = listCapacity;
 
