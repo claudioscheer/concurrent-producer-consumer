@@ -17,4 +17,22 @@ public final class RandomNumbers {
         int randomNum = RandomNumbers.RANDOM.nextInt(RandomNumbers.MAX);
         return randomNum;
     }
+
+    /* I think it is a bad way to do this. */
+    public static int getRandomOperationIndex() {
+        int randomNumber = RandomNumbers.RANDOM.nextInt(1001);
+        if (randomNumber > 900) {
+            // 15% of listSize.
+            return 3;
+        } else if (randomNumber > 800) {
+            // 15% of contains.
+            return 2;
+        } else if (randomNumber > 350) {
+            // 35% of remove.
+            return 1;
+        } else {
+            // 35% of add.
+            return 0;
+        }
+    }
 }
