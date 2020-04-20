@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -79,7 +80,6 @@ public class Test {
         }
 
         System.out.println("Interrupting threads...");
-        System.out.println();
         for (IntegerListOperator thread : threads) {
             try {
                 thread.interrupt();
@@ -97,18 +97,43 @@ public class Test {
 
         int currentMonitorSize = list.size();
         int[] operationsCount = getOperationsCountSum(threads);
+        int operationsCountSum = Arrays.stream(operationsCount).sum();
+        double averageListSizes = allListSizes.stream().mapToInt(x -> x).average().getAsDouble();
+        double operationsThroughput = (operationsCountSum / durationSeconds);
+        double addOperationsThroughput = (operationsCount[ListOperationType.add.ordinal()] / durationSeconds);
+        double removeOperationsThroughput = (operationsCount[ListOperationType.remove.ordinal()] / durationSeconds);
+        double containsOperationsThroughput = (operationsCount[ListOperationType.contains.ordinal()] / durationSeconds);
+        double listSizeOperationsThroughput = (operationsCount[ListOperationType.listSize.ordinal()] / durationSeconds);
+
+        System.out.println();
+        System.out.println("--------------------------------------------------");
+        System.out.println();
 
         System.out.println(String.format("Duration in seconds: %s", durationSeconds));
         System.out.println(String.format("Current list size: %s", currentMonitorSize));
+        System.out.println(String.format("Average list size: %s", averageListSizes));
+        System.out.println();
+        System.out.println(String.format("Total of operations: %s", operationsCountSum));
+        System.out.println(String.format("Operations throughput per second: %s", operationsThroughput));
+        System.out.println();
         System.out.println(
-                String.format("Mean list size: %s", allListSizes.stream().mapToInt(x -> x).average().getAsDouble()));
-        System.out.println(String.format("Number of add: %s", operationsCount[ListOperationType.add.ordinal()]));
-        System.out.println(String.format("Number of remove: %s", operationsCount[ListOperationType.remove.ordinal()]));
+                String.format("Total of add operations: %s", operationsCount[ListOperationType.add.ordinal()]));
+        System.out.println(String.format("add operations throughput per second: %s", addOperationsThroughput));
+        System.out.println();
         System.out.println(
-                String.format("Number of contains: %s", operationsCount[ListOperationType.contains.ordinal()]));
-        System.out.println(
-                String.format("Number of listSize: %s", operationsCount[ListOperationType.listSize.ordinal()]));
-
+                String.format("Total of remove operations: %s", operationsCount[ListOperationType.remove.ordinal()]));
+        System.out.println(String.format("remove operations throughput per second: %s", removeOperationsThroughput));
+        System.out.println();
+        System.out.println(String.format("Total of contains operations: %s",
+                operationsCount[ListOperationType.contains.ordinal()]));
+        System.out
+                .println(String.format("contains operations throughput per second: %s", containsOperationsThroughput));
+        System.out.println();
+        System.out.println(String.format("Total of listSize operations: %s",
+                operationsCount[ListOperationType.listSize.ordinal()]));
+        System.out
+                .println(String.format("listSize operations throughput per second: %s", listSizeOperationsThroughput));
+        System.out.println();
         System.out.println("Finished.");
     }
 }
