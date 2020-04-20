@@ -5,11 +5,17 @@ import numpy as np
 
 
 x = np.arange(2, 14.0, 2)
-y = np.loadtxt(sys.argv[1], delimiter=",", dtype=float)
+data = np.loadtxt(sys.argv[1], delimiter=",", dtype=float)
 
 fig, ax = plt.subplots(figsize=(12, 8))
-ax.plot(x, y, marker="X")
+ax.plot(x, data, marker="X")
 ax.legend(["1k", "2k", "3k"])
+
+for i, y_column in enumerate(data):
+    for j in y_column:
+        ax.annotate(
+            "{:10.2f}".format(j), xy=((i * 2 + 2), (j + j * 0.01)), textcoords="data"
+        )
 
 ax.set(
     xlabel="Threads", ylabel="Throughput (operations/second)", title=sys.argv[2],
