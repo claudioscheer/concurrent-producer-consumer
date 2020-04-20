@@ -47,9 +47,11 @@ public class Test {
 
         // It is necessary to limit the size of the list.
         GenericListInterface<Integer> list = new CoarseList<Integer>(listCapacity);
+        // Slower.
         // while (list.size() < listInitialSize) {
         // list.add(RandomNumbers.getRandomInt());
         // }
+        // Faster.
         for (int i = 1; i <= listInitialSize; i++) {
             list.add(i);
         }

@@ -22,11 +22,11 @@ def get_data_from_test(file):
 
 
 def get_size_index(size):
-    if size == 1000:
+    if size == 100000:
         return 0
-    elif size == 2000:
+    elif size == 200000:
         return 1
-    elif size == 3000:
+    elif size == 300000:
         return 2
     return None
 

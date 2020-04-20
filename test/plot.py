@@ -9,7 +9,7 @@ data = np.loadtxt(sys.argv[1], delimiter=",", dtype=float)
 
 fig, ax = plt.subplots(figsize=(12, 8))
 ax.plot(x, data, marker="X")
-ax.legend(["1k", "2k", "3k"])
+ax.legend(["100k", "200k", "300k"])
 
 for i, y_column in enumerate(data):
     for j in y_column:
@@ -22,4 +22,4 @@ ax.set(
 )
 ax.grid()
 
-fig.savefig(f"{sys.argv[2].replace(' ', '')}.pdf")
+fig.savefig(f"plots/{sys.argv[2].replace(' ', '')}.pdf")
