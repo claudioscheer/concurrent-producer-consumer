@@ -31,13 +31,15 @@ public class Test {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        int listInitialSize = 10000;// Integer.parseInt(args[0]);
-        int listCapacity = 30000;// Integer.parseInt(args[1]);
-        int numberThreads = 12;// Integer.parseInt(args[2]);
+        int listInitialSize = Integer.parseInt(args[0]);
+        int listCapacity = Integer.parseInt(args[1]);
+        int numberThreads = Integer.parseInt(args[2]);
+
+        RandomNumbers.MAX = listCapacity;
 
         System.out.println();
         System.out.println(String.format("Initial list size: %s", listInitialSize));
-        System.out.println(String.format("Maximum list size: %s", listCapacity));
+        System.out.println(String.format("List capacity: %s", listCapacity));
         System.out.println(String.format("Number of threads: %s", numberThreads));
         System.out.println();
         System.out.println("Starting test...");
@@ -48,6 +50,8 @@ public class Test {
             list.add(RandomNumbers.getRandomInt());
         }
 
+        System.out.println(String.format("List size after initialization: %s", list.size()));
+
         System.out.println("Starting producers and consumers...");
         List<IntegerListOperator> threads = getAllThreads(numberThreads, list);
         for (IntegerListOperator thread : threads) {
@@ -57,14 +61,17 @@ public class Test {
         // Use a period of warm-up. During this period, operations are not counted.
         System.out.println("Warming-up...");
         try {
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.SECONDS.sleep(10);
         } catch (InterruptedException e) {
         }
+        System.out.println(String.format("List size after warm-up: %s", list.size()));
+
         IntegerListOperator.warmingUp = false;
 
+        long startTime = System.nanoTime();
         try {
             System.out.println("Producing and consuming...");
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(60);
         } catch (InterruptedException e) {
         }
 
@@ -77,11 +84,14 @@ public class Test {
             } catch (InterruptedException e) {
             }
         }
+        long endTime = System.nanoTime();
+        double durationSeconds = (endTime - startTime) / 1_000_000_000d;
 
         int currentMonitorSize = list.size();
         int[] operationsCount = getOperationsCountSum(threads);
 
-        System.out.println(String.format("Current monitor size: %s", currentMonitorSize));
+        System.out.println(String.format("Duration in seconds: %s", durationSeconds));
+        System.out.println(String.format("Current list size: %s", currentMonitorSize));
         System.out.println(String.format("Number of adds: %s", operationsCount[ListOperationType.add.ordinal()]));
         System.out.println(String.format("Number of removes: %s", operationsCount[ListOperationType.remove.ordinal()]));
         System.out.println(
