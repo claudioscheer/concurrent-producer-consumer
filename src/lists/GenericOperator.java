@@ -6,9 +6,9 @@ import enums.ListOperationType;
 
 public abstract class GenericOperator extends Thread {
 
-    protected abstract boolean operateAdd();
+    protected abstract boolean operateAdd() throws InterruptedException;
 
-    protected abstract boolean operateRemove();
+    protected abstract boolean operateRemove() throws InterruptedException;
 
     protected abstract boolean operateContains();
 
@@ -22,12 +22,16 @@ public abstract class GenericOperator extends Thread {
     @Override
     public void run() {
         while (!this.isInterrupted()) {
-            ListOperationType operation = this.getRandomOperation();
-            this.operate(operation);
+            try {
+                ListOperationType operation = this.getRandomOperation();
+                this.operate(operation);
+            } catch (InterruptedException e) {
+                break;
+            }
         }
     }
 
-    public void operate(ListOperationType operation) {
+    public void operate(ListOperationType operation) throws InterruptedException {
         switch (operation) {
             case add:
                 this.operateAdd();

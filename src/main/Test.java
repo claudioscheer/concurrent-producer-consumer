@@ -30,20 +30,20 @@ public class Test {
         return count;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         int listInitialSize = 10000;// Integer.parseInt(args[0]);
-        int listMaximumSize = 300;// Integer.parseInt(args[1]);
+        int listCapacity = 30000;// Integer.parseInt(args[1]);
         int numberThreads = 12;// Integer.parseInt(args[2]);
 
         System.out.println();
         System.out.println(String.format("Initial list size: %s", listInitialSize));
-        System.out.println(String.format("Maximum list size: %s", listMaximumSize));
+        System.out.println(String.format("Maximum list size: %s", listCapacity));
         System.out.println(String.format("Number of threads: %s", numberThreads));
         System.out.println();
         System.out.println("Starting test...");
 
         // It is necessary to limit the size of the list.
-        GenericListInterface<Integer> list = new CoarseList<Integer>();
+        GenericListInterface<Integer> list = new CoarseList<Integer>(listCapacity);
         for (int i = 0; i < listInitialSize; i++) {
             list.add(RandomNumbers.getRandomInt());
         }

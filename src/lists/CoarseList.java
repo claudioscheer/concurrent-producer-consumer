@@ -9,6 +9,7 @@
 */
 package lists;
 
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -21,18 +22,25 @@ import interfaces.GenericListInterface;
  * @author Maurice Herlihy
  */
 public class CoarseList<T> implements GenericListInterface<T> {
+  // List capacity.
+  private int capacity;
   // First list Node.
   private Node head;
   // Last list Node.
   private Node tail;
   // Synchronizes access to list.
   private Lock lock = new ReentrantLock();
+  // Wait while the queue is full.
+  private final Condition notFull = lock.newCondition();
+  // Wait while the queue is empty.
+  private final Condition notEmpty = lock.newCondition();
 
-  public CoarseList() {
+  public CoarseList(int capacity) {
     // Add sentinels to start and end.
     this.head = new Node(Integer.MIN_VALUE);
     this.tail = new Node(Integer.MAX_VALUE);
     head.next = this.tail;
+    this.capacity = capacity;
   }
 
   /**
@@ -40,29 +48,38 @@ public class CoarseList<T> implements GenericListInterface<T> {
    * 
    * @param item Element to add.
    * @return True iff element was not there already.
+   * @throws InterruptedException
    */
   @Override
-  public boolean add(T item) {
+  public boolean add(T item) throws InterruptedException {
     Node pred, curr;
     int key = item.hashCode();
     lock.lock();
     try {
+      // Wait while the list is full. Using .size() may not be a
+      // good solution.
+      while (this.size() == this.capacity) {
+        notFull.await();
+      }
+
       pred = this.head;
       curr = pred.next;
       while (curr.key < key) {
         pred = curr;
         curr = curr.next;
       }
-      if (key == curr.key) {
-        // Element already present.
-        return false;
-      } else {
+      // By default, the element was already present.
+      boolean response = false;
+      if (key != curr.key) {
         // Add element.
         Node node = new Node(item);
         node.next = curr;
         pred.next = node;
-        return true;
+        response = true;
       }
+      // Notifies that the list is not empty.
+      notEmpty.signal();
+      return response;
     } finally {
       lock.unlock();
     }
@@ -73,27 +90,35 @@ public class CoarseList<T> implements GenericListInterface<T> {
    * 
    * @param item Element to remove.
    * @return True iff element was present.
+   * @throws InterruptedException
    */
   @Override
-  public boolean remove(T item) {
+  public boolean remove(T item) throws InterruptedException {
     Node pred, curr;
     int key = item.hashCode();
     lock.lock();
     try {
+      // Wait while the list is empty.
+      while (this.size() == 0) {
+        notEmpty.await();
+      }
+
       pred = this.head;
       curr = pred.next;
       while (curr.key < key) {
         pred = curr;
         curr = curr.next;
       }
+      // By default, the element was not present.
+      boolean response = false;
       if (key == curr.key) {
         // Element is present.
         pred.next = curr.next;
-        return true;
-      } else {
-        // Element is not present.
-        return false;
+        response = true;
       }
+      // Notifies that the list is not full.
+      notFull.signal();
+      return response;
     } finally {
       lock.unlock();
     }

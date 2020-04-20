@@ -12,12 +12,12 @@ public class IntegerListOperator extends GenericOperator {
     }
 
     @Override
-    public boolean operateAdd() {
+    public boolean operateAdd() throws InterruptedException {
         return this.list.add(RandomNumbers.getRandomInt());
     }
 
     @Override
-    public boolean operateRemove() {
+    public boolean operateRemove() throws InterruptedException {
         return this.list.remove(RandomNumbers.getRandomInt());
     }
 

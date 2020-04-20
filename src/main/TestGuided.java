@@ -6,13 +6,13 @@ import lists.IntegerListOperator;
 
 public class TestGuided {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         IntegerListOperator.warmingUp = false;
-        GenericListInterface<Double> list = new CoarseList<Double>();
-        list.add(Math.random());
+        GenericListInterface<Double> list = new CoarseList<Double>(1);
         double a = Math.random();
         list.add(a);
         list.remove(a);
+        list.add(Math.random());
 
         int currentMonitorSize = list.size();
 
