@@ -67,7 +67,7 @@ public class Test {
         }
         System.out.println(String.format("List size after warm-up: %s", list.size()));
 
-        IntegerListOperator.warmingUp = false;
+        IntegerListOperator.WARMING_UP = false;
 
         long startTime = System.nanoTime();
         try {

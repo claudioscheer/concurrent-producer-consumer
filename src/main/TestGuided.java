@@ -1,7 +1,6 @@
 package main;
 
 import interfaces.GenericListInterface;
-import lists.CoarseList;
 import lists.FineList;
 import operators.IntegerListOperator;
 import utils.RandomNumbers;
@@ -22,11 +21,11 @@ public class TestGuided {
     }
 
     private static void testListCapacity() throws InterruptedException {
-        IntegerListOperator.warmingUp = false;
+        IntegerListOperator.WARMING_UP = false;
         GenericListInterface<Double> list = new FineList<Double>(1);
         double a = Math.random();
         list.add(a);
-        list.remove(a);
+        // list.remove(a);
         list.add(Math.random());
 
         int currentMonitorSize = list.size();
@@ -34,7 +33,7 @@ public class TestGuided {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        // testRandomNumbersProbabilities();
+        testRandomNumbersProbabilities();
         testListCapacity();
     }
 }

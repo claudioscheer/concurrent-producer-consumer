@@ -42,7 +42,7 @@ public class FineList<T> implements GenericListInterface<T> {
    * @throws InterruptedException
    */
   public synchronized boolean add(T item) throws InterruptedException {
-    // Wait while the list is full.
+    // Wait while the list is full. The .size() may be wrong.
     while (this.size() == this.capacity) {
       wait();
     }
@@ -84,7 +84,7 @@ public class FineList<T> implements GenericListInterface<T> {
    * @throws InterruptedException
    */
   public synchronized boolean remove(T item) throws InterruptedException {
-    // Wait while the list is empty.
+    // Wait while the list is empty. The .size() may be wrong.
     while (this.size() == 0) {
       wait();
     }
@@ -143,7 +143,7 @@ public class FineList<T> implements GenericListInterface<T> {
 
   @Override
   public int size() {
-    // I think there is no need to lock to count. However, I will.
+    // I think there is no need to lock to count.
     Node pred = null, curr = null;
     head.lock();
     try {

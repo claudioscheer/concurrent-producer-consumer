@@ -16,7 +16,7 @@ public abstract class GenericOperator extends Thread {
 
     protected abstract int operateListSize();
 
-    public volatile static boolean warmingUp = true;
+    public volatile static boolean WARMING_UP = true;
     private int[] operationsCount;
     private List<Integer> listSizes;
 
@@ -49,13 +49,13 @@ public abstract class GenericOperator extends Thread {
                 this.operateContains();
                 break;
             case listSize:
-                if (!GenericOperator.warmingUp) {
+                if (!GenericOperator.WARMING_UP) {
                     // Add to the list if it is not warming-up.
                     this.listSizes.add(this.operateListSize());
                 }
                 break;
         }
-        if (!GenericOperator.warmingUp) {
+        if (!GenericOperator.WARMING_UP) {
             operationsCount[operation.ordinal()] += 1;
         }
     }

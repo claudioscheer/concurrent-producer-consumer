@@ -99,7 +99,8 @@ public class CoarseList<T> implements GenericListInterface<T> {
     int key = item.hashCode();
     lock.lock();
     try {
-      // Wait while the list is empty.
+      // Wait while the list is empty. Using .size() may not be a
+      // good solution.
       while (this.size() == 0) {
         notEmpty.await();
       }
