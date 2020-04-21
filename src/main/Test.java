@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import enums.ListOperationType;
 import interfaces.GenericListInterface;
-import lists.CoarseList;
+import lists.FineList;
 import operators.IntegerListOperator;
 import utils.RandomNumbers;
 
@@ -46,12 +46,7 @@ public class Test {
         System.out.println("Starting test...");
 
         // It is necessary to limit the size of the list.
-        GenericListInterface<Integer> list = new CoarseList<Integer>(listCapacity);
-        // Slower.
-        // while (list.size() < listInitialSize) {
-        // list.add(RandomNumbers.getRandomInt());
-        // }
-        // Faster.
+        GenericListInterface<Integer> list = new FineList<Integer>(listCapacity);
         for (int i = 1; i <= listInitialSize; i++) {
             list.add(i);
         }

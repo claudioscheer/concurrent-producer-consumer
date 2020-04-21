@@ -2,13 +2,14 @@
  * FineList.java
  *
  * Created on January 3, 2006, 6:50 PM
+ * Updated on April 20, 2020, 9:02 PM, by Claudio Scheer
  *
- * From "Multiprocessor Synchronization and Concurrent Data Structures",
- * by Maurice Herlihy and Nir Shavit.
+ * From "Multiprocessor Synchronization and Concurrent Data Structures", by Maurice Herlihy and Nir Shavit.
  * Copyright 2006 Elsevier Inc. All rights reserved.
  */
 package lists;
 
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -21,29 +22,31 @@ import interfaces.GenericListInterface;
  * @author Maurice Herlihy
  */
 public class FineList<T> implements GenericListInterface<T> {
-  /**
-   * First list entry
-   */
-  private Node head;
-  private int count;
 
-  /**
-   * Constructor
-   */
-  public FineList() {
-    // Add sentinels to start and end
+  // List capacity.
+  private int capacity;
+  // First list entry.
+  private Node head;
+
+  public FineList(int capacity) {
+    // Add sentinels to start and end.
     head = new Node(Integer.MIN_VALUE);
     head.next = new Node(Integer.MAX_VALUE);
+    this.capacity = capacity;
   }
 
   /**
    * Add an element.
    * 
-   * @param item element to add
-   * @return true iff element was not there already
+   * @param item Element to add.
+   * @return True iff element was not there already.
+   * @throws InterruptedException
    */
-  @Override
-  public boolean add(T item) {
+  public synchronized boolean add(T item) throws InterruptedException {
+    // Wait while the list is full.
+    while (this.size() == this.capacity) {
+      wait();
+    }
     int key = item.hashCode();
     head.lock();
     Node pred = head;
@@ -63,7 +66,8 @@ public class FineList<T> implements GenericListInterface<T> {
         Node newNode = new Node(item);
         newNode.next = curr;
         pred.next = newNode;
-        ++this.count;
+        // Notifies that the list is not empty.
+        notifyAll();
         return true;
       } finally {
         curr.unlock();
@@ -76,11 +80,15 @@ public class FineList<T> implements GenericListInterface<T> {
   /**
    * Remove an element.
    * 
-   * @param item element to remove
-   * @return true iff element was present
+   * @param item Element to remove.
+   * @return True iff element was present.
+   * @throws InterruptedException
    */
-  @Override
-  public boolean remove(T item) {
+  public synchronized boolean remove(T item) throws InterruptedException {
+    // Wait while the list is empty.
+    while (this.size() == 0) {
+      wait();
+    }
     Node pred = null, curr = null;
     int key = item.hashCode();
     head.lock();
@@ -95,9 +103,10 @@ public class FineList<T> implements GenericListInterface<T> {
           curr = curr.next;
           curr.lock();
         }
+        // Notifies that the list is not full.
+        notifyAll();
         if (curr.key == key) {
           pred.next = curr.next;
-          --this.count;
           return true;
         }
         return false;
@@ -109,9 +118,8 @@ public class FineList<T> implements GenericListInterface<T> {
     }
   }
 
-  @Override
   public boolean contains(T item) {
-    Node last = null, pred = null, curr = null;
+    Node pred = null, curr = null;
     int key = item.hashCode();
     head.lock();
     try {
@@ -136,34 +144,45 @@ public class FineList<T> implements GenericListInterface<T> {
 
   @Override
   public int size() {
-    return this.count;
+    // I think there is no need to lock to count. However, I will.
+    Node pred = null, curr = null;
+    head.lock();
+    try {
+      int count = 0;
+      pred = head;
+      curr = pred.next;
+      curr.lock();
+      try {
+        while (curr.item != null) {
+          pred.unlock();
+          pred = curr;
+          curr = curr.next;
+          ++count;
+          curr.lock();
+        }
+        return count;
+      } finally {
+        curr.unlock();
+      }
+    } finally {
+      pred.unlock();
+    }
   }
 
-  /**
-   * list Node
-   */
   private class Node {
-    /**
-     * actual item
-     */
+    // Actual item.
     T item;
-    /**
-     * item's hash code
-     */
+    // Item's hash code.
     int key;
-    /**
-     * next Node in list
-     */
+    // Next Node in list.
     Node next;
-    /**
-     * synchronizes individual Node
-     */
+    // Synchronizes individual Node.
     Lock lock;
 
     /**
-     * Constructor for usual Node
+     * Constructor for usual Node.
      * 
-     * @param item element in list
+     * @param item Element in list.
      */
     Node(T item) {
       this.item = item;
@@ -172,9 +191,9 @@ public class FineList<T> implements GenericListInterface<T> {
     }
 
     /**
-     * Constructor for sentinel Node
+     * Constructor for sentinel Node.
      * 
-     * @param key should be min or max int value
+     * @param key Should be min or max int value.
      */
     Node(int key) {
       this.item = null;
@@ -183,14 +202,14 @@ public class FineList<T> implements GenericListInterface<T> {
     }
 
     /**
-     * Lock Node
+     * Lock Node.
      */
     void lock() {
       lock.lock();
     }
 
     /**
-     * Unlock Node
+     * Unlock Node.
      */
     void unlock() {
       lock.unlock();

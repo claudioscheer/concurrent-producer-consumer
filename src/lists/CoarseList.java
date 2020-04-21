@@ -1,12 +1,12 @@
 /*
-* CoarseList.java
-*
-* Created on January 3, 2006, 5:02 PM
-* Updated on April 14, 2020, 1:13 PM, by Claudio Scheer
-*
-* From "Multiprocessor Synchronization and Concurrent Data Structures", by Maurice Herlihy and Nir Shavit.
-* Copyright 2006 Elsevier Inc. All rights reserved.
-*/
+ * CoarseList.java
+ *
+ * Created on January 3, 2006, 5:02 PM
+ * Updated on April 14, 2020, 1:13 PM, by Claudio Scheer
+ *
+ * From "Multiprocessor Synchronization and Concurrent Data Structures", by Maurice Herlihy and Nir Shavit.
+ * Copyright 2006 Elsevier Inc. All rights reserved.
+ */
 package lists;
 
 import java.util.concurrent.locks.Condition;
@@ -22,6 +22,7 @@ import interfaces.GenericListInterface;
  * @author Maurice Herlihy
  */
 public class CoarseList<T> implements GenericListInterface<T> {
+
   // List capacity.
   private int capacity;
   // First list Node.

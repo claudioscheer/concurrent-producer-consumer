@@ -2,6 +2,7 @@ package main;
 
 import interfaces.GenericListInterface;
 import lists.CoarseList;
+import lists.FineList;
 import operators.IntegerListOperator;
 import utils.RandomNumbers;
 
@@ -22,7 +23,7 @@ public class TestGuided {
 
     private static void testListCapacity() throws InterruptedException {
         IntegerListOperator.warmingUp = false;
-        GenericListInterface<Double> list = new CoarseList<Double>(1);
+        GenericListInterface<Double> list = new FineList<Double>(1);
         double a = Math.random();
         list.add(a);
         list.remove(a);
@@ -33,7 +34,7 @@ public class TestGuided {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        testRandomNumbersProbabilities();
-        // testListCapacity();
+        // testRandomNumbersProbabilities();
+        testListCapacity();
     }
 }
