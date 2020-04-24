@@ -170,6 +170,7 @@ public class CoarseList<T> implements GenericListInterface<T> {
   }
 
   private class Node {
+
     // Actual item.
     T item;
     // Item's hash code.
