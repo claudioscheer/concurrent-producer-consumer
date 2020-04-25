@@ -2,3 +2,4 @@
 
 python plot.py csv/coarse-list.csv "Coarse List Throughput"
 python plot.py csv/fine-list.csv "Fine List Throughput"
+python plot.py csv/optimistic-list.csv "Optimistic List Throughput"
