@@ -25,7 +25,7 @@ public class TestGuided {
         GenericListInterface<Double> list = new OptimisticList<Double>(1);
         double a = Math.random();
         list.add(a);
-        list.remove(a);
+        // list.remove(a);
         list.add(Math.random());
 
         int currentMonitorSize = list.size();
