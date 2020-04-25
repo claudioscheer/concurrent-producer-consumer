@@ -38,8 +38,13 @@ public class OptimisticList<T> implements GenericListInterface<T> {
    * 
    * @param item Element to add.
    * @return True iff element was not there already.
+   * @throws InterruptedException
    */
-  public boolean add(T item) {
+  public synchronized boolean add(T item) throws InterruptedException {
+    // Wait while the list is full. The .size() may be wrong.
+    while (this.size() == this.capacity) {
+      wait();
+    }
     int key = item.hashCode();
     while (true) {
       Entry pred = this.head;
@@ -61,6 +66,8 @@ public class OptimisticList<T> implements GenericListInterface<T> {
             pred.next = entry;
             response = true;
           }
+          // Notifies that the list is not empty.
+          notifyAll();
           return response;
         }
       } finally {
@@ -75,8 +82,13 @@ public class OptimisticList<T> implements GenericListInterface<T> {
    * 
    * @param item Element to remove.
    * @return True iff element was present.
+   * @throws InterruptedException
    */
-  public boolean remove(T item) {
+  public synchronized boolean remove(T item) throws InterruptedException {
+    // Wait while the list is empty. The .size() may be wrong.
+    while (this.size() == 0) {
+      wait();
+    }
     int key = item.hashCode();
     while (true) {
       Entry pred = this.head;
@@ -89,14 +101,16 @@ public class OptimisticList<T> implements GenericListInterface<T> {
       curr.lock();
       try {
         if (this.validate(pred, curr)) {
+          // Not present in list by default.
+          boolean response = false;
           if (curr.key == key) {
             // Present in list.
             pred.next = curr.next;
-            return true;
-          } else {
-            // Not present in list.
-            return false;
+            response = true;
           }
+          // Notifies that the list is not full.
+          notifyAll();
+          return response;
         }
       } finally {
         pred.unlock();
@@ -134,9 +148,21 @@ public class OptimisticList<T> implements GenericListInterface<T> {
     }
   }
 
+  /*
+   * Since there is not lock, it can be inaccurate when multiple threads are
+   * operating in the list.
+   */
   @Override
   public int size() {
-    return 0;
+    Entry pred = this.head;
+    Entry curr = pred.next;
+    int count = 0;
+    while (curr.item != null) {
+      pred = curr;
+      curr = curr.next;
+      ++count;
+    }
+    return count;
   }
 
   /**
