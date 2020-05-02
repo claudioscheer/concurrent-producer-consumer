@@ -33,7 +33,7 @@ public class TestGuided {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        // testRandomNumbersProbabilities();
-        testListCapacity();
+        testRandomNumbersProbabilities();
+        // testListCapacity();
     }
 }

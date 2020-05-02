@@ -4,8 +4,6 @@ import java.util.SplittableRandom;
 
 public final class RandomNumbers {
 
-    // This value will be the same as the capacity of the list.
-    public static int MAX;
     private static SplittableRandom RANDOM = new SplittableRandom();
 
     /*
@@ -14,18 +12,18 @@ public final class RandomNumbers {
      * make the list remain full most of the time.
      */
     public static int getRandomInt() {
-        int randomNum = RandomNumbers.RANDOM.nextInt(RandomNumbers.MAX + 1);
+        int randomNum = RandomNumbers.RANDOM.nextInt();
         return randomNum;
     }
 
     /* I think it is a bad way to do this. */
     public static int getRandomOperationIndex() {
         int randomNumber = RandomNumbers.RANDOM.nextInt(1001);
-        if (randomNumber > 998) {
-            // 0.2% of listSize.
+        if (randomNumber > 990) {
+            // 1% of listSize.
             return 3;
         } else if (randomNumber > 800) {
-            // 19.8% of contains.
+            // 19% of contains.
             return 2;
         } else if (randomNumber > 400) {
             // 40% of remove.

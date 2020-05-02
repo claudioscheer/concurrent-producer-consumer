@@ -7,9 +7,8 @@ import java.util.concurrent.TimeUnit;
 
 import enums.ListOperationType;
 import interfaces.GenericListInterface;
-import lists.OptimisticList;
+import lists.CoarseList;
 import operators.IntegerListOperator;
-import utils.RandomNumbers;
 
 public class Test {
 
@@ -33,19 +32,15 @@ public class Test {
 
     public static void main(String[] args) throws InterruptedException {
         int listInitialSize = Integer.parseInt(args[0]);
-        int listCapacity = Integer.parseInt(args[1]);
-        int numberThreads = Integer.parseInt(args[2]);
-
-        RandomNumbers.MAX = listCapacity;
+        int numberThreads = Integer.parseInt(args[1]);
 
         System.out.println();
         System.out.println(String.format("Initial list size: %s", listInitialSize));
-        System.out.println(String.format("List capacity: %s", listCapacity));
         System.out.println(String.format("Number of threads: %s", numberThreads));
         System.out.println();
         System.out.println("Starting test...");
 
-        GenericListInterface<Integer> list = new OptimisticList<Integer>(listCapacity);
+        GenericListInterface<Integer> list = new CoarseList<Integer>();
         for (int i = 1; i <= listInitialSize; i++) {
             list.add(i);
         }
@@ -61,7 +56,7 @@ public class Test {
         // Use a period of warm-up. During this period, operations are not counted.
         System.out.println("Warming-up...");
         try {
-            TimeUnit.SECONDS.sleep(10);
+            TimeUnit.SECONDS.sleep(20);
         } catch (InterruptedException e) {
         }
         System.out.println(String.format("List size after warm-up: %s", list.size()));
@@ -71,7 +66,7 @@ public class Test {
         long startTime = System.nanoTime();
         try {
             System.out.println("Producing and consuming...");
-            TimeUnit.SECONDS.sleep(60);
+            TimeUnit.SECONDS.sleep(90);
         } catch (InterruptedException e) {
         }
 

@@ -9,7 +9,6 @@
  */
 package lists;
 
-import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -23,25 +22,18 @@ import interfaces.GenericListInterface;
  */
 public class CoarseList<T> implements GenericListInterface<T> {
 
-  // List capacity.
-  private int capacity;
   // First list Node.
   private Node head;
   // Last list Node.
   private Node tail;
   // Synchronizes access to list.
   private Lock lock = new ReentrantLock();
-  // Wait while the queue is full.
-  private final Condition notFull = lock.newCondition();
-  // Wait while the queue is empty.
-  private final Condition notEmpty = lock.newCondition();
 
-  public CoarseList(int capacity) {
+  public CoarseList() {
     // Add sentinels to start and end.
     this.head = new Node(Integer.MIN_VALUE);
     this.tail = new Node(Integer.MAX_VALUE);
     head.next = this.tail;
-    this.capacity = capacity;
   }
 
   /**
@@ -57,12 +49,6 @@ public class CoarseList<T> implements GenericListInterface<T> {
     int key = item.hashCode();
     lock.lock();
     try {
-      // Wait while the list is full. Using .size() may not be a
-      // good solution.
-      while (this.size() == this.capacity) {
-        notFull.await();
-      }
-
       pred = this.head;
       curr = pred.next;
       while (curr.key < key) {
@@ -78,8 +64,6 @@ public class CoarseList<T> implements GenericListInterface<T> {
         pred.next = node;
         response = true;
       }
-      // Notifies that the list is not empty.
-      notEmpty.signal();
       return response;
     } finally {
       lock.unlock();
@@ -99,12 +83,6 @@ public class CoarseList<T> implements GenericListInterface<T> {
     int key = item.hashCode();
     lock.lock();
     try {
-      // Wait while the list is empty. Using .size() may not be a
-      // good solution.
-      while (this.size() == 0) {
-        notEmpty.await();
-      }
-
       pred = this.head;
       curr = pred.next;
       while (curr.key < key) {
@@ -118,8 +96,6 @@ public class CoarseList<T> implements GenericListInterface<T> {
         pred.next = curr.next;
         response = true;
       }
-      // Notifies that the list is not full.
-      notFull.signal();
       return response;
     } finally {
       lock.unlock();
@@ -152,21 +128,15 @@ public class CoarseList<T> implements GenericListInterface<T> {
 
   @Override
   public int size() {
-    Node pred, curr;
-    lock.lock();
-    try {
-      int count = 0;
-      pred = this.head;
-      curr = pred.next;
-      while (curr.item != null) {
-        ++count;
-        pred = curr;
-        curr = curr.next;
-      }
-      return count;
-    } finally {
-      lock.unlock();
+    Node pred = this.head;
+    Node curr = pred.next;
+    int count = 0;
+    while (curr.item != null) {
+      ++count;
+      pred = curr;
+      curr = curr.next;
     }
+    return count;
   }
 
   private class Node {
