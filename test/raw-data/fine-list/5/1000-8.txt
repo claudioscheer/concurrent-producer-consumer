@@ -1,0 +1,34 @@
+
+Initial list size: 1000
+Number of threads: 8
+
+Starting test...
+List size after initialization: 1000
+Starting producers and consumers...
+Warming-up...
+List size after warm-up: 64947
+Producing and consuming...
+Interrupting threads...
+
+--------------------------------------------------
+
+Duration in seconds: 90.024511702
+Current list size: 133504
+Average list size: 99953.71296296296
+
+Total of operations: 170862
+Operations throughput per second: 1897.9497557908344
+
+Total of add operations: 68563
+add operations throughput per second: 761.6036866376782
+
+Total of remove operations: 68170
+remove operations throughput per second: 757.2382089186664
+
+Total of contains operations: 32401
+contains operations throughput per second: 359.9130879737965
+
+Total of listSize operations: 1728
+listSize operations throughput per second: 19.1947722606932
+
+Finished.
