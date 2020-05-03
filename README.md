@@ -8,7 +8,7 @@ I used [Ant](https://ant.apache.org/) to build the project. Below is the descrip
   - `src/lists`: the implementation of the lists;
 - `test`: results and scripts used to test the Coarse and Fine lists;
   - `test/raw-data`: the raw output of the class `Test.java`, for each tested list;
-    - the naming convention for each file in `.zip` files is as follows: `INITIAL_LIST_SIZE-MAXIMUM_LIST_SIZE-NUMBER_OF_THREADS.txt`;
+    - the naming convention for each file is as follows: `INITIAL_LIST_SIZE-MAXIMUM_LIST_SIZE.txt`;
   - `test/csv`: CSV files created from raw data, using the `test/output-csv.py` script;
   - `test/plot.py`: creates a plot using [Matplotlib](https://matplotlib.org/) and based on the generated CSV files;
   - `test/plots`: plots showing the throughput per second for each list;
