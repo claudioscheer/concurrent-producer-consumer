@@ -22,15 +22,12 @@ import interfaces.GenericListInterface;
  */
 public class OptimisticList<T> implements GenericListInterface<T> {
 
-  // List capacity.
-  private int capacity;
   // First list entry.
   private Entry head;
 
-  public OptimisticList(int capacity) {
+  public OptimisticList() {
     this.head = new Entry(Integer.MIN_VALUE);
     this.head.next = new Entry(Integer.MAX_VALUE);
-    this.capacity = capacity;
   }
 
   /**
@@ -40,11 +37,7 @@ public class OptimisticList<T> implements GenericListInterface<T> {
    * @return True iff element was not there already.
    * @throws InterruptedException
    */
-  public synchronized boolean add(T item) throws InterruptedException {
-    // Wait while the list is full. The .size() may be wrong.
-    while (this.size() == this.capacity) {
-      wait();
-    }
+  public boolean add(T item) throws InterruptedException {
     int key = item.hashCode();
     while (true) {
       Entry pred = this.head;
@@ -66,8 +59,6 @@ public class OptimisticList<T> implements GenericListInterface<T> {
             pred.next = entry;
             response = true;
           }
-          // Notifies that the list is not empty.
-          notifyAll();
           return response;
         }
       } finally {
@@ -84,11 +75,7 @@ public class OptimisticList<T> implements GenericListInterface<T> {
    * @return True iff element was present.
    * @throws InterruptedException
    */
-  public synchronized boolean remove(T item) throws InterruptedException {
-    // Wait while the list is empty. The .size() may be wrong.
-    while (this.size() == 0) {
-      wait();
-    }
+  public boolean remove(T item) throws InterruptedException {
     int key = item.hashCode();
     while (true) {
       Entry pred = this.head;
@@ -108,8 +95,6 @@ public class OptimisticList<T> implements GenericListInterface<T> {
             pred.next = curr.next;
             response = true;
           }
-          // Notifies that the list is not full.
-          notifyAll();
           return response;
         }
       } finally {

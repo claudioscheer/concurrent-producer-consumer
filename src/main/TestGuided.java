@@ -22,7 +22,7 @@ public class TestGuided {
 
     private static void testListCapacity() throws InterruptedException {
         IntegerListOperator.WARMING_UP = false;
-        GenericListInterface<Double> list = new OptimisticList<Double>(1);
+        GenericListInterface<Double> list = new OptimisticList<Double>();
         double a = Math.random();
         list.add(a);
         // list.remove(a);

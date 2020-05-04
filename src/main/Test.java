@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import enums.ListOperationType;
 import interfaces.GenericListInterface;
-import lists.FineList;
+import lists.OptimisticList;
 import operators.IntegerListOperator;
 
 public class Test {
@@ -40,7 +40,7 @@ public class Test {
         System.out.println();
         System.out.println("Starting test...");
 
-        GenericListInterface<Integer> list = new FineList<Integer>();
+        GenericListInterface<Integer> list = new OptimisticList<Integer>();
         for (int i = 1; i <= listInitialSize; i++) {
             list.add(i);
         }
