@@ -28,5 +28,6 @@ for ((i = 1; i <= $tests_count; i++)); do
     done
 done
 
-python output-csv.py csv/$output_name.csv raw-data/$output_name
-python plot.py csv/$output_name.csv "$2"
+python output-hdf.py hdf/$output_name.h5 raw-data/$output_name
+python plot.py hdf/$output_name.h5 "$2"
+python plot.py hdf/$output_name.h5 "$2" list_size
