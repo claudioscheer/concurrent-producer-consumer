@@ -19,14 +19,14 @@ public final class RandomNumbers {
 
     /* I think it is a bad way to do this. */
     public static int getRandomOperationIndex() {
-        int randomNumber = RandomNumbers.RANDOM.nextInt(1001);
-        if (randomNumber > 998) {
-            // 0.02% of listSize.
+        int randomNumber = RandomNumbers.RANDOM.nextInt(10001);
+        if (randomNumber > 9999) {
+            // 0.0001% of listSize.
             return 3;
-        } else if (randomNumber > 800) {
-            // 19.98% of contains.
+        } else if (randomNumber > 8000) {
+            // 19.9999% of contains.
             return 2;
-        } else if (randomNumber > 400) {
+        } else if (randomNumber > 4000) {
             // 40% of remove.
             return 1;
         } else {
