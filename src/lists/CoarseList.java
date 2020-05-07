@@ -41,30 +41,27 @@ public class CoarseList<T> implements GenericListInterface<T> {
    * 
    * @param item Element to add.
    * @return True iff element was not there already.
-   * @throws InterruptedException
    */
   @Override
-  public boolean add(T item) throws InterruptedException {
+  public boolean add(T item) {
     Node pred, curr;
     int key = item.hashCode();
     lock.lock();
     try {
-      pred = this.head;
+      pred = head;
       curr = pred.next;
       while (curr.key < key) {
         pred = curr;
         curr = curr.next;
       }
-      // By default, the element was already present.
-      boolean response = false;
-      if (key != curr.key) {
-        // Add element.
+      if (key == curr.key) {
+        return false;
+      } else {
         Node node = new Node(item);
         node.next = curr;
         pred.next = node;
-        response = true;
+        return true;
       }
-      return response;
     } finally {
       lock.unlock();
     }
@@ -75,10 +72,9 @@ public class CoarseList<T> implements GenericListInterface<T> {
    * 
    * @param item Element to remove.
    * @return True iff element was present.
-   * @throws InterruptedException
    */
   @Override
-  public boolean remove(T item) throws InterruptedException {
+  public boolean remove(T item) {
     Node pred, curr;
     int key = item.hashCode();
     lock.lock();
@@ -89,15 +85,13 @@ public class CoarseList<T> implements GenericListInterface<T> {
         pred = curr;
         curr = curr.next;
       }
-      // By default, the element was not present.
-      boolean response = false;
-      if (key == curr.key) {
-        // Element is present.
+      if (key == curr.key) { // present
         pred.next = curr.next;
-        response = true;
+        return true;
+      } else {
+        return false; // not present
       }
-      return response;
-    } finally {
+    } finally { // always unlock
       lock.unlock();
     }
   }
@@ -114,14 +108,14 @@ public class CoarseList<T> implements GenericListInterface<T> {
     int key = item.hashCode();
     lock.lock();
     try {
-      pred = this.head;
+      pred = head;
       curr = pred.next;
       while (curr.key < key) {
         pred = curr;
         curr = curr.next;
       }
       return (key == curr.key);
-    } finally {
+    } finally { // always unlock
       lock.unlock();
     }
   }

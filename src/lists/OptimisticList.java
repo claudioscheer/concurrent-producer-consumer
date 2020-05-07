@@ -35,47 +35,8 @@ public class OptimisticList<T> implements GenericListInterface<T> {
    * 
    * @param item Element to add.
    * @return True iff element was not there already.
-   * @throws InterruptedException
    */
-  public boolean add(T item) throws InterruptedException {
-    int key = item.hashCode();
-    while (true) {
-      Entry pred = this.head;
-      Entry curr = pred.next;
-      while (curr.key <= key) {
-        pred = curr;
-        curr = curr.next;
-      }
-      pred.lock();
-      curr.lock();
-      try {
-        if (this.validate(pred, curr)) {
-          // By default, the element was already present.
-          boolean response = false;
-          if (key != curr.key) {
-            // Add element.
-            Entry entry = new Entry(item);
-            entry.next = curr;
-            pred.next = entry;
-            response = true;
-          }
-          return response;
-        }
-      } finally {
-        pred.unlock();
-        curr.unlock();
-      }
-    }
-  }
-
-  /**
-   * Remove an element.
-   * 
-   * @param item Element to remove.
-   * @return True iff element was present.
-   * @throws InterruptedException
-   */
-  public boolean remove(T item) throws InterruptedException {
+  public boolean add(T item) {
     int key = item.hashCode();
     while (true) {
       Entry pred = this.head;
@@ -87,17 +48,50 @@ public class OptimisticList<T> implements GenericListInterface<T> {
       pred.lock();
       curr.lock();
       try {
-        if (this.validate(pred, curr)) {
-          // Not present in list by default.
-          boolean response = false;
-          if (curr.key == key) {
-            // Present in list.
-            pred.next = curr.next;
-            response = true;
+        if (validate(pred, curr)) {
+          if (curr.key == key) { // present
+            return false;
+          } else { // not present
+            Entry entry = new Entry(item);
+            entry.next = curr;
+            pred.next = entry;
+            return true;
           }
-          return response;
         }
-      } finally {
+      } finally { // always unlock
+        pred.unlock();
+        curr.unlock();
+      }
+    }
+  }
+
+  /**
+   * Remove an element.
+   * 
+   * @param item Element to remove.
+   * @return True iff element was present.
+   */
+  public boolean remove(T item) {
+    int key = item.hashCode();
+    while (true) {
+      Entry pred = this.head;
+      Entry curr = pred.next;
+      while (curr.key < key) {
+        pred = curr;
+        curr = curr.next;
+      }
+      pred.lock();
+      curr.lock();
+      try {
+        if (validate(pred, curr)) {
+          if (curr.key == key) { // present in list
+            pred.next = curr.next;
+            return true;
+          } else { // not present in list
+            return false;
+          }
+        }
+      } finally { // always unlock
         pred.unlock();
         curr.unlock();
       }
@@ -113,8 +107,7 @@ public class OptimisticList<T> implements GenericListInterface<T> {
   public boolean contains(T item) {
     int key = item.hashCode();
     while (true) {
-      // Sentinel node.
-      Entry pred = this.head;
+      Entry pred = this.head; // sentinel node;
       Entry curr = pred.next;
       while (curr.key < key) {
         pred = curr;
@@ -123,10 +116,10 @@ public class OptimisticList<T> implements GenericListInterface<T> {
       try {
         pred.lock();
         curr.lock();
-        if (this.validate(pred, curr)) {
+        if (validate(pred, curr)) {
           return (curr.key == key);
         }
-      } finally {
+      } finally { // always unlock
         pred.unlock();
         curr.unlock();
       }
@@ -143,9 +136,9 @@ public class OptimisticList<T> implements GenericListInterface<T> {
     Entry curr = pred.next;
     int count = 0;
     while (curr.item != null) {
+      ++count;
       pred = curr;
       curr = curr.next;
-      ++count;
     }
     return count;
   }

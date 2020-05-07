@@ -36,9 +36,8 @@ public class FineList<T> implements GenericListInterface<T> {
    * 
    * @param item Element to add.
    * @return True iff element was not there already.
-   * @throws InterruptedException
    */
-  public boolean add(T item) throws InterruptedException {
+  public boolean add(T item) {
     int key = item.hashCode();
     head.lock();
     Node pred = head;
@@ -72,9 +71,8 @@ public class FineList<T> implements GenericListInterface<T> {
    * 
    * @param item Element to remove.
    * @return True iff element was present.
-   * @throws InterruptedException
    */
-  public boolean remove(T item) throws InterruptedException {
+  public boolean remove(T item) {
     Node pred = null, curr = null;
     int key = item.hashCode();
     head.lock();

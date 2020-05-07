@@ -5,6 +5,7 @@ import java.util.SplittableRandom;
 public final class RandomNumbers {
 
     private static SplittableRandom RANDOM = new SplittableRandom();
+    public static int MAX_SIZE = Integer.MAX_VALUE;
 
     /*
      * This method is necessary, because if you choose a random number to remove and
@@ -12,18 +13,18 @@ public final class RandomNumbers {
      * make the list remain full most of the time.
      */
     public static int getRandomInt() {
-        int randomNum = RandomNumbers.RANDOM.nextInt();
+        int randomNum = RandomNumbers.RANDOM.nextInt(RandomNumbers.MAX_SIZE);
         return randomNum;
     }
 
     /* I think it is a bad way to do this. */
     public static int getRandomOperationIndex() {
         int randomNumber = RandomNumbers.RANDOM.nextInt(1001);
-        if (randomNumber > 990) {
-            // 1% of listSize.
+        if (randomNumber > 998) {
+            // 0.02% of listSize.
             return 3;
         } else if (randomNumber > 800) {
-            // 19% of contains.
+            // 19.98% of contains.
             return 2;
         } else if (randomNumber > 400) {
             // 40% of remove.
