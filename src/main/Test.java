@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import enums.ListOperationType;
 import interfaces.GenericListInterface;
-import lists.OptimisticList;
+import lists.LazyList;
 import operators.IntegerListOperator;
 import utils.RandomNumbers;
 
@@ -43,7 +43,7 @@ public class Test {
         System.out.println();
         System.out.println("Starting test...");
 
-        GenericListInterface<Integer> list = new OptimisticList<Integer>();
+        GenericListInterface<Integer> list = new LazyList<Integer>();
         for (int i = 0; i < listInitialSize; i++) {
             list.add(RandomNumbers.getRandomInt());
         }

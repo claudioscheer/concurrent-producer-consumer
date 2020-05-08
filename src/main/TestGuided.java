@@ -1,8 +1,9 @@
 package main;
 
 import interfaces.GenericListInterface;
+import lists.FineList;
+import lists.LazyList;
 import lists.OptimisticList;
-import operators.IntegerListOperator;
 import utils.RandomNumbers;
 
 public class TestGuided {
@@ -20,20 +21,28 @@ public class TestGuided {
         }
     }
 
-    private static void testListCapacity() throws InterruptedException {
-        IntegerListOperator.WARMING_UP = false;
-        GenericListInterface<Double> list = new OptimisticList<Double>();
-        double a = Math.random();
-        list.add(a);
-        // list.remove(a);
-        list.add(Math.random());
+    private static void testListSize() throws InterruptedException {
+        int x1 = 1;
+        int x2 = 2;
+        int x3 = 2;
 
-        int currentMonitorSize = list.size();
-        System.out.println(String.format("Current monitor size: %s", currentMonitorSize));
+        GenericListInterface<Integer> lazyList = new LazyList<Integer>();
+        lazyList.add(x1);
+        lazyList.add(x2);
+        lazyList.add(x3);
+        lazyList.remove(x3);
+
+        GenericListInterface<Integer> optimisticList = new OptimisticList<Integer>();
+        optimisticList.add(x1);
+        optimisticList.add(x2);
+        optimisticList.add(x3);
+
+        System.out.println(lazyList.size());
+        System.out.println(optimisticList.size());
     }
 
     public static void main(String[] args) throws InterruptedException {
-        testRandomNumbersProbabilities();
-        // testListCapacity();
+        // testRandomNumbersProbabilities();
+        testListSize();
     }
 }
