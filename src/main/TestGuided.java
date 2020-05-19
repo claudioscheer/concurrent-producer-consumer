@@ -1,7 +1,7 @@
 package main;
 
 import interfaces.GenericListInterface;
-import lists.FineList;
+import lists.LockFreeList;
 import lists.LazyList;
 import lists.OptimisticList;
 import utils.RandomNumbers;
@@ -24,21 +24,15 @@ public class TestGuided {
     private static void testListSize() throws InterruptedException {
         int x1 = 1;
         int x2 = 2;
-        int x3 = 2;
+        int x3 = 3;
 
-        GenericListInterface<Integer> lazyList = new LazyList<Integer>();
-        lazyList.add(x1);
-        lazyList.add(x2);
-        lazyList.add(x3);
-        lazyList.remove(x3);
+        GenericListInterface<Integer> lockFreeList = new LockFreeList<Integer>();
+        lockFreeList.add(x1);
+        lockFreeList.add(x2);
+        lockFreeList.add(x3);
+        lockFreeList.remove(x3);
 
-        GenericListInterface<Integer> optimisticList = new OptimisticList<Integer>();
-        optimisticList.add(x1);
-        optimisticList.add(x2);
-        optimisticList.add(x3);
-
-        System.out.println(lazyList.size());
-        System.out.println(optimisticList.size());
+        System.out.println(lockFreeList.size());
     }
 
     public static void main(String[] args) throws InterruptedException {
