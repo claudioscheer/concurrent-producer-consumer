@@ -102,33 +102,15 @@ public class LockFreeList<T> implements GenericListInterface<T> {
 
   @Override
   public int size() {
+    Node pred = this.head;
+    Node curr = pred.next.getReference();
     int count = 0;
-    Node pred = null, curr = null, succ = null;
-    // Is curr marked?
-    boolean[] marked = { false };
-    boolean snip;
-    retry: while (true) {
-      pred = this.head;
-      curr = pred.next.getReference();
-      while (true) {
-        succ = curr.next.get(marked);
-        // Replace curr if marked.
-        while (marked[0]) {
-          snip = pred.next.compareAndSet(curr, succ, false, false);
-          if (!snip) {
-            continue retry;
-          }
-          curr = pred.next.getReference();
-          succ = curr.next.get(marked);
-        }
-        if (curr.item == null) {
-          return count;
-        }
-        ++count;
-        pred = curr;
-        curr = succ;
-      }
+    while (curr.item != null) {
+      ++count;
+      pred = curr;
+      curr = curr.next.getReference();
     }
+    return count;
   }
 
   /**
