@@ -76,7 +76,7 @@ public class LockFreeList<T> implements GenericListInterface<T> {
       } else {
         // Snip out matching node.
         Node succ = curr.next.getReference();
-        snip = curr.next.attemptMark(succ, true);
+        snip = curr.next.compareAndSet(succ, succ, false, true);
         if (!snip) {
           continue;
         }
@@ -93,11 +93,14 @@ public class LockFreeList<T> implements GenericListInterface<T> {
    * @return True iff element is present.
    */
   public boolean contains(T item) {
+    boolean[] marked = { false };
     int key = item.hashCode();
-    // Find predecessor and curren entries.
-    Window window = find(this.head, key);
-    Node curr = window.curr;
-    return (curr.key == key);
+    Node curr = head;
+    while (curr.key < key) {
+      curr = curr.next.getReference();
+      Node succ = curr.next.get(marked);
+    }
+    return (curr.key == key && !marked[0]);
   }
 
   @Override
@@ -173,7 +176,6 @@ public class LockFreeList<T> implements GenericListInterface<T> {
    */
   public Window find(Node head, int key) {
     Node pred = null, curr = null, succ = null;
-    // Is curr marked?
     boolean[] marked = { false };
     boolean snip;
     retry: while (true) {
@@ -181,13 +183,12 @@ public class LockFreeList<T> implements GenericListInterface<T> {
       curr = pred.next.getReference();
       while (true) {
         succ = curr.next.get(marked);
-        // Replace curr if marked.
         while (marked[0]) {
           snip = pred.next.compareAndSet(curr, succ, false, false);
           if (!snip) {
             continue retry;
           }
-          curr = pred.next.getReference();
+          curr = succ;
           succ = curr.next.get(marked);
         }
         if (curr.key >= key) {
