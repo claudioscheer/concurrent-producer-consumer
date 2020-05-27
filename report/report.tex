@@ -1,0 +1,116 @@
+\documentclass{article}
+
+\usepackage{xurl}
+\usepackage{listings}
+
+\title{Performance Comparison Between Different Concurrent Lists}
+\author{
+    Claudio Scheer\\
+    claudio.scheer@edu.pucrs.br
+}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+In this report, I will present performance results using different list approaches. Five approaches were tested: coarse list, fine list, lazy list, lock free list and optimistic list. Each of these concurrent lists has methods for adding items, removing items, and testing whether the list contains a specific item.
+
+To assess performance, I used the implementations provided by the authors of the book The Art of Multiprocessor Programming. These implementations needed a few changes discussed in Section~\ref{section:list_problems}. As all implementations were in Java, I also executed all tests in Java.
+
+I do not discuss in depth the differences between the lists in this report, as these differences are discussed in detail in Section 9 of the book The Art of Multiprocessor Programming. In addition, the differences and how each list is implemented were widely discussed in class.
+
+In doing so, in Section~\ref{section:methodology}, I discussed the methodology used in the tests and, in Section~\ref{section:results}, I present the results of the tests.
+
+
+\section{Problems with the authors' implementation} \label{section:list_problems}
+
+Two main problems were found: an implementation error in the optimistic list and outdated implementations. All implementations were downloaded from this website: \url{https://booksite.elsevier.com/9780123973375}.
+
+In the provided implementation of the optimistic list (\texttt{OptimisticList.java}), authors use the following method to add an item to the list:
+
+\begin{lstlisting}[language=Java, numbers=left, captionpos=b, basicstyle=\ttfamily\footnotesize, caption=Method add of OptimisticList.java, label=lst:add_optimistic]
+public boolean add(T item) {
+    int key = item.hashCode();
+    while (true) {
+        Entry pred = this.head;
+        Entry curr = pred.next;
+        while (curr.key <= key) {
+            pred = curr;
+            curr = curr.next;
+        }
+        pred.lock();
+        curr.lock();
+        try {
+            if (validate(pred, curr)) {
+                if (curr.key == key) { // present
+                    return false;
+                } else { // not present
+                    Entry entry = new Entry(item);
+                    entry.next = curr;
+                    pred.next = entry;
+                    return true;
+                }
+            }
+        } finally { // always unlock
+            pred.unlock();
+            curr.unlock();
+        }
+    }
+}
+\end{lstlisting}
+
+On lines 7 and 8, the \texttt{pred} variable assumes the current node and \texttt{curr} assumes the next node. Therefore, if the \texttt{=} sign is used on line 6 of Listing~\ref{lst:add_optimistic}, the test on line 14 will never be satisfied and the item will always be added to the list. Hence, to solve this problem, I simply removed the \texttt{=} sign on line 6.
+
+Another problem I had with the lists was the different implementations between the 2008 and 2012 book edition. In the 2012 edition, some implementations were updated, but the source code provided was not. Therefore, all implementations were updated according to the 2012 book edition.
+
+The next point is not a problem with the list's implementations, but a necessary feature for my tests. The required feature was a method that could return the size of the list. This method was used to test whether the list size was stable during the test period.
+
+Therefore, to avoid adding an overhead to the methods originaly implemented by the authors, I create a method that simply looks for the next item from the head node to the tail node. The nodes are counted and the the count is returned. All lists follow the same logic. This method has no blocking, which can make the return of this method out of date. However, in my tests, this did not appear to be a problem.
+
+
+\section{Testing methodology} \label{section:methodology}
+
+The experiments were run on a computer with the following configuration:
+
+\begin{itemize}
+    \item \textbf{Java version}: openjdk 14.0.1
+    \item \textbf{OS}: Ubuntu 20.04
+    \item \textbf{Core(s) per socket}: 6
+    \item \textbf{Thread(s) per core}: 2
+    \item \textbf{CPU(s)}: 12
+    \item \textbf{RAM}: 32GB
+\end{itemize}
+
+Since the computer has 12 CPUs available, I ran the experiments using 2, 4, 6, 8, 10 and 12 threads. For each number of threads, I tested three list sizes: 100 items, 1000 items and 10000 items. These eighteen experiments were executed three time each and the mean and standard deviation were used to analyze the results.
+
+The number of elements in the list must be stable. Therefore, as the number added and removed from the list is random, I generated random numbers using Equation~\ref{eq:random_number}, where $N$ is the size of the list.
+
+\begin{equation} \label{eq:random_number}
+    0 \leq x < (N * 2)
+\end{equation}
+
+There are four possible operations to be performed on a list: add, remove, contains and list size. The list size operation is used to colect the size of the list at a specific point. The probability of each operation is 40\%, 40\%, 19.9999\% and 0.0001\%, respectively.
+
+In summary, the specific number of threads is started and each thread gets a random operation and performs it. The number of operations performed on each thread is stored and added to other threads at the end of the test.
+
+The warm-up time used was 15 seconds. The test time was 60 seconds. The operations performed were counted only during the test time. To obtain the throughput of each list, I divided the total number of operations performed on all threads by the test time. In the throughput, the test time also includes the time to interrupt and join the threads.
+
+
+\section{Results} \label{section:results}
+
+
+
+
+\section{Conclusions}
+
+
+
+\section{Miscellaneous}
+
+All the souce code used in this work are available here: \url{https://github.com/claudioscheer/concurrent-producer-consumer}.
+
+
+\end{document}
