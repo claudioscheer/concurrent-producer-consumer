@@ -32,7 +32,7 @@ if len(sys.argv) > 3 and sys.argv[3] == "list_size":
     columns = ["list_size_100", "list_size_1000", "list_size_10000"]
     label_columns = columns
 
-ax = df_plot[columns].plot(marker="X", figsize=(12, 8))
+ax = df_plot[columns].plot(marker="X", figsize=(12, 8), title=title)
 ax.set(xlabel="Threads", ylabel=ylabel)
 ax.legend(["100", "1k", "10k"])
 ax.grid()
