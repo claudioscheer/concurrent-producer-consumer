@@ -14,3 +14,7 @@ I used [Ant](https://ant.apache.org/) to build the project. Below is the descrip
   - `test/plots`: plots showing the throughput per second for each list;
 
 Information on the throughput of each operation (add, remove, contains, listSize) and the average size of the list is shown in the raw data.
+
+## Report
+
+You can see the final report [here](./report/report.pdf).

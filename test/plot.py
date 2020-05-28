@@ -33,7 +33,7 @@ if len(sys.argv) > 3 and sys.argv[3] == "list_size":
     label_columns = columns
 
 ax = df_plot[columns].plot(marker="X", figsize=(12, 8))
-ax.set(xlabel="Threads", ylabel=ylabel, title=title)
+ax.set(xlabel="Threads", ylabel=ylabel)
 ax.legend(["100", "1k", "10k"])
 ax.grid()
 
@@ -43,7 +43,7 @@ for i, y_column in enumerate(df_plot_values):
     for j, c in enumerate(y_column):
         if not show_std or j % 2 == 0:
             text = (
-                "{:.2f}-{:.2f}".format(c, y_column[j + 1])
+                "{:.0f}-{:.0f}".format(c, y_column[j + 1])
                 if show_std
                 else "{:.2f}".format(c)
             )

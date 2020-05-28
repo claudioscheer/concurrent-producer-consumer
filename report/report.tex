@@ -1,7 +1,10 @@
 \documentclass{article}
 
+\usepackage[a4paper, total={6.5in, 10in}]{geometry}
 \usepackage{xurl}
 \usepackage{listings}
+\usepackage{graphicx}
+\usepackage{float}
 
 \title{Performance Comparison Between Different Concurrent Lists}
 \author{
@@ -18,7 +21,7 @@
 
 In this report, I will present performance results using different list approaches. Five approaches were tested: coarse list, fine list, lazy list, lock free list and optimistic list. Each of these concurrent lists has methods for adding items, removing items, and testing whether the list contains a specific item.
 
-To assess performance, I used the implementations provided by the authors of the book The Art of Multiprocessor Programming. These implementations needed a few changes discussed in Section~\ref{section:list_problems}. As all implementations were in Java, I also executed all tests in Java.
+To assess performance, I used the implementations provided by the authors of the book The Art of Multiprocessor Programming - Maurice Herlihy and Nir Shavit. These implementations needed a few changes discussed in Section~\ref{section:list_problems}. As all implementations were in Java, I also executed all tests in Java.
 
 I do not discuss in depth the differences between the lists in this report, as these differences are discussed in detail in Section 9 of the book The Art of Multiprocessor Programming. In addition, the differences and how each list is implemented were widely discussed in class.
 
@@ -78,9 +81,9 @@ The experiments were run on a computer with the following configuration:
 \begin{itemize}
     \item \textbf{Java version}: openjdk 14.0.1
     \item \textbf{OS}: Ubuntu 20.04
-    \item \textbf{Core(s) per socket}: 6
-    \item \textbf{Thread(s) per core}: 2
-    \item \textbf{CPU(s)}: 12
+    \item \textbf{Cores per socket}: 6
+    \item \textbf{Threads per core}: 2
+    \item \textbf{CPUs}: 12
     \item \textbf{RAM}: 32GB
 \end{itemize}
 
@@ -96,19 +99,130 @@ There are four possible operations to be performed on a list: add, remove, conta
 
 In summary, the specific number of threads is started and each thread gets a random operation and performs it. The number of operations performed on each thread is stored and added to other threads at the end of the test.
 
-The warm-up time used was 15 seconds. The test time was 60 seconds. The operations performed were counted only during the test time. To obtain the throughput of each list, I divided the total number of operations performed on all threads by the test time. In the throughput, the test time also includes the time to interrupt and join the threads.
+The warm-up and test time was 15 seconds and 60 seconds, respectively. The operations performed were counted only during the test time. To obtain the throughput of each list, I divided the total number of operations performed on all threads by the test time. In the throughput, the test time also includes the time to interrupt and join the threads.
 
 
 \section{Results} \label{section:results}
 
+Each section below shows the throughput and the list size for each list tested. The throughput plot shows the average value and the standard deviation, separated by the $-$ (hyphen) character. The charts with the average size of the list are smaller than others. They are not so informative, but corroborate that the list size was stable during the tests.
 
+In general, the smaller the list size, the higher the throughput. In addition, in all implementations of the lists, the size remained stable. Since the list size is stable, I do not show the number of each operation performed in this report. However, all of this information can be seen in the GitHub repository, presented in Section~\ref{sec:miscellaneous}, in the folder \texttt{test/raw-data}.
+
+\subsection{Coarse list}
+
+Figure~\ref{fig:coarse-size} shows the average size of the coarse list.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{../test/plots/CoarseListAverageListSize.pdf}
+    \caption{Coarse List Average List Size}
+    \label{fig:coarse-size}
+\end{figure}
+
+In general, what Figure~\ref{fig:coarse-throughput} shows is that increasing the number of threads does not increase the throughput. The list with 100 items had better performance with 4 threads and the worst performance with 12 threads. In a larger coarse list, the number of threads does not affect the throughput.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../test/plots/CoarseListThroughput.pdf}
+    \caption{Coarse List Throughput}
+    \label{fig:coarse-throughput}
+\end{figure}
+
+\subsection{Fine list}
+
+Figure~\ref{fig:fine-size} shows the average size of the fine list.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{../test/plots/FineListAverageListSize.pdf}
+    \caption{Fine List Average List Size}
+    \label{fig:fine-size}
+\end{figure}
+
+Similar to the coarse list, in general, increasing the number of threads does not increase throughput of the list. Only in the larger list, the throughput increased with the number of threads, as shown in Figure~\ref{fig:fine-throughput}.
+
+A strange behavior happened in the list with 100 elements, using 2 threads. I do not know why, but the throughput was much higher than the same list size using 4 threads.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../test/plots/FineListThroughput.pdf}
+    \caption{Fine List Throughput}
+    \label{fig:fine-throughput}
+\end{figure}
+
+\subsection{Optimistic list}
+
+Figure~\ref{fig:optimistic-size} shows the average size of the optimistic list.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{../test/plots/OptimisticListAverageListSize.pdf}
+    \caption{Optimistic List Average List Size}
+    \label{fig:optimistic-size}
+\end{figure}
+
+The list with 100 items decreased the performance with more threads. In the other two lists, more threads resulted in more throughput, as shown in Figure~\ref{fig:optimistic-throughput}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../test/plots/OptimisticListThroughput.pdf}
+    \caption{Optimistic List Throughput}
+    \label{fig:optimistic-throughput}
+\end{figure}
+
+\subsection{Lazy list}
+
+Figure~\ref{fig:lazy-size} shows the average size of the lazy list.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{../test/plots/LazyListAverageListSize.pdf}
+    \caption{Lazy List Average List Size}
+    \label{fig:lazy-size}
+\end{figure}
+
+Among the list that used a lock mechanism, the lazy list had the best performance. With the smaller list, the throughput increased up to 8 threads and, considering the standard deviation, the throughput was almost stable with 10 and 12 threads.
+
+With the larger lists, the throughput increased with the number of threads, as shown in Figure~\ref{fig:lazy-throughput}. On a computer with more CPUs available, the throughput may increase even more.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../test/plots/LazyListThroughput.pdf}
+    \caption{Lazy List Throughput}
+    \label{fig:lazy-throughput}
+\end{figure}
+
+\subsection{Lock free list}
+
+Figure~\ref{fig:lock-free-size} shows the average size of the lock free list.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{../test/plots/LockFreeListAverageListSize.pdf}
+    \caption{Lock Free List Average List Size}
+    \label{fig:lock-free-size}
+\end{figure}
+
+The lock free list, as the name implies, does not use the lock mechanism. Therefore, intuitively, it is expected to have a higher throughput. However, as Figure~\ref{fig:lock-free-throughput} shows, the lock free list surpasses the lazy list only in smaller lists. As the number of items in the list increases, the throughput of tje optimistic list becomes worst than when using the lock mechanism.
+
+Even so, it is important to note than the throughput increases significantly with the number of threads.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../test/plots/LockFreeListThroughput.pdf}
+    \caption{Lock Free List Throughput}
+    \label{fig:lock-free-throughput}
+\end{figure}
 
 
 \section{Conclusions}
 
+The lock free list have a good performance on small lists. However, on a larger list, its performance can be poor when compared to the lazy list. One possible explanation for this is that the list needs many while loops to ensure that a node was not changed by another thread.
+
+In general, as the number of threads increase, the throughput also increases. Another important thing to note is that, as the complexity of the list increases, the throughput also increases. This shows that there is space for new approaches that make a better use of the resources provided by the computer or even by the programming language.
 
 
-\section{Miscellaneous}
+\section{Miscellaneous} \label{sec:miscellaneous}
 
 All the souce code used in this work are available here: \url{https://github.com/claudioscheer/concurrent-producer-consumer}.
 

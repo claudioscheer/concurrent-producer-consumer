@@ -22,12 +22,14 @@ def get_data_from_test(file):
                 throughput = float(get_result_from_line(line))
             elif line.startswith("Average list size"):
                 avg_list_size = float(get_result_from_line(line))
-            elif line.startswith("add operations throughput per second"):
+            elif line.startswith("Total of add operations"):
                 add_operations = float(get_result_from_line(line))
-            elif line.startswith("remove operations throughput per second"):
+            elif line.startswith("Total of remove operations"):
                 remove_operations = float(get_result_from_line(line))
-            elif line.startswith("contains operations throughput per second"):
+            elif line.startswith("Total of contains operations"):
                 contains_operations = float(get_result_from_line(line))
+            elif line.startswith("Total of listSize operations"):
+                list_size_operations = float(get_result_from_line(line))
     return (
         size,
         threads,
@@ -36,6 +38,7 @@ def get_data_from_test(file):
         add_operations,
         remove_operations,
         contains_operations,
+        list_size_operations,
     )
 
 
@@ -52,6 +55,7 @@ def output_2_array():
                     "add_operations",
                     "remove_operations",
                     "contains_operations",
+                    "list_size_operations",
                 ],
                 [str(x + 1) for x in range(10)],
             ]
@@ -72,6 +76,7 @@ def output_2_array():
                 add_operations,
                 remove_operations,
                 contains_operations,
+                list_size_operations,
             ) = get_data_from_test(os.path.join(results_test, f))
             data.at[str(threads), (str(size), "throughput", test)] = throughput
             data.at[str(threads), (str(size), "avg_list_size", test)] = avg_list_size
@@ -82,6 +87,9 @@ def output_2_array():
             data.at[
                 str(threads), (str(size), "contains_operations", test)
             ] = contains_operations
+            data.at[
+                str(threads), (str(size), "list_size_operations", test)
+            ] = list_size_operations
     return data
 
 
