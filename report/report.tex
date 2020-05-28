@@ -21,9 +21,9 @@
 
 In this report, I will present performance results using different list approaches. Five approaches were tested: coarse list, fine list, lazy list, lock free list and optimistic list. Each of these concurrent lists has methods for adding items, removing items, and testing whether the list contains a specific item.
 
-To assess performance, I used the implementations provided by the authors of the book The Art of Multiprocessor Programming - Maurice Herlihy and Nir Shavit. These implementations needed a few changes discussed in Section~\ref{section:list_problems}. As all implementations were in Java, I also executed all tests in Java.
+To assess performance, I used the implementations provided by the authors of the book \cite{DBLP:books/daglib/0020056}. These implementations needed a few changes discussed in Section~\ref{section:list_problems}. As all implementations were in Java, I also executed all tests in Java.
 
-I do not discuss in depth the differences between the lists in this report, as these differences are discussed in detail in Section 9 of the book The Art of Multiprocessor Programming. In addition, the differences and how each list is implemented were widely discussed in class.
+I do not discuss in depth the differences between the lists in this report, as these differences are discussed in detail in Section 9 of the book \cite{DBLP:books/daglib/0020056}. In addition, the differences and how each list is implemented were widely discussed in class.
 
 In doing so, in Section~\ref{section:methodology}, I discussed the methodology used in the tests and, in Section~\ref{section:results}, I present the results of the tests.
 
@@ -226,5 +226,8 @@ In general, as the number of threads increase, the throughput also increases. An
 
 All the souce code used in this work are available here: \url{https://github.com/claudioscheer/concurrent-producer-consumer}.
 
+
+\bibliographystyle{unsrt}
+\bibliography{references}
 
 \end{document}
