@@ -1,3 +1,6 @@
+/*
+ * @author Claudio Scheer
+ */
 package main;
 
 import java.util.ArrayList;

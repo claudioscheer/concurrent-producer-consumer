@@ -1,3 +1,6 @@
+/*
+ * @author Claudio Scheer
+ */
 package operators;
 
 import java.util.ArrayList;

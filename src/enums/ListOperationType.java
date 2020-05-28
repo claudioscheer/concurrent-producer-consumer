@@ -1,3 +1,6 @@
+/*
+ * @author Claudio Scheer
+ */
 package enums;
 
 public enum ListOperationType {

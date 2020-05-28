@@ -1,3 +1,6 @@
+/*
+ * @author Claudio Scheer
+ */
 package utils;
 
 import java.util.SplittableRandom;

@@ -1,3 +1,6 @@
+/*
+ * @author Claudio Scheer
+ */
 package interfaces;
 
 public interface GenericListInterface<T> {

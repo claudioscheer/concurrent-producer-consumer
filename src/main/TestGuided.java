@@ -1,9 +1,10 @@
+/*
+ * @author Claudio Scheer
+ */
 package main;
 
 import interfaces.GenericListInterface;
 import lists.LockFreeList;
-import lists.LazyList;
-import lists.OptimisticList;
 import utils.RandomNumbers;
 
 public class TestGuided {
