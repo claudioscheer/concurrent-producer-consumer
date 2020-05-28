@@ -106,7 +106,7 @@ The warm-up and test time was 15 seconds and 60 seconds, respectively. The opera
 
 Each section below shows the throughput and the list size for each list tested. The throughput plot shows the average value and the standard deviation, separated by the $-$ (hyphen) character. The charts with the average size of the list are smaller than others. They are not so informative, but corroborate that the list size was stable during the tests.
 
-In general, the smaller the list size, the higher the throughput. In addition, in all implementations of the lists, the size remained stable. Since the list size is stable, I do not show the number of each operation performed in this report. However, all of this information can be seen in the GitHub repository, presented in Section~\ref{sec:miscellaneous}, in the folder \texttt{test/raw-data}.
+In general, the smaller the list size, the higher the throughput. In addition, in all implementations of the lists, the size remained stable. Since the list size is stable, I do not show the number of each operation performed in this report. However, all of this information can be seen in the GitHub repository, presented in Section~\ref{sec:source-code}, in the folder \texttt{test/raw-data}.
 
 \subsection{Coarse list}
 
@@ -222,7 +222,7 @@ The lock free list have a good performance on small lists. However, on a larger 
 In general, as the number of threads increase, the throughput also increases. Another important thing to note is that, as the complexity of the list increases, the throughput also increases. This shows that there is space for new approaches that make a better use of the resources provided by the computer or even by the programming language.
 
 
-\section{Miscellaneous} \label{sec:miscellaneous}
+\section{Source code} \label{sec:source-code}
 
 All the souce code used in this work are available here: \url{https://github.com/claudioscheer/concurrent-producer-consumer}.
 
